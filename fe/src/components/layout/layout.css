@@ -1,0 +1,32 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+Header {
+  z-index: 1000;
+}
+
+/* .layout {
+  margin-top: 100px;
+  display: flex;
+  flex: 1;
+  border-style: solid;
+  border-color: red;
+} */
+
+.container {
+  display: flex;
+  margin: 100px 0px 0px 0px;
+  overflow: overlay;
+  flex-direction: column;
+  align-items: center;
+  /* border-style: solid; */
+  /* border-color: aqua; */
+}
+
+/* .contents {
+  flex: 1;
+  border-style: solid;
+  border-color: burlywood;
+} */
