@@ -10,8 +10,9 @@ import Board from '../routes/Board/Board';
 import CreatePost from 'routes/Board/CreatePost';
 import Post from './Board/Post';
 import LoginPage from 'routes/Login/Login';
-import axios from 'axios';
 import { authCheck } from 'services/AuthService';
+import MoveToTop from 'services/ScrollTop';
+import MoodQuiz from 'routes/MoodQuiz/MoodQuiz';
 
 const AppRouter = () => {
   const [isLogin, setIsLogin] = useState(false);
@@ -32,6 +33,7 @@ const AppRouter = () => {
 
   return (
     <Router>
+      <MoveToTop />
       <Header isLogin={isLogin}/>
       <div className='container'>
       <Routes>
@@ -41,6 +43,7 @@ const AppRouter = () => {
             <Route path='/posting' element={<CreatePost />} />
             <Route path='/post' element={<Post />} />
             <Route path='/login' element={<LoginPage />} />
+            <Route path='/moodquiz' element={<MoodQuiz />} />
           </>
       </Routes>
       </div>

@@ -14,6 +14,31 @@ router.get('/getgalleryinfo', async(req, res)=> {
   res.send(data);
 });
 
+router.get('/getmapquiz', async(req, res)=> {
+  const g_info = await db.query(`SELECT * FROM gallery_on_mon`);
+  let randomIndexArray = [];
+  let quizArr = [];
+  let galleryNames = [];
+
+  for (let i=0; i<5; i++) {
+    const rannum = Math.floor(Math.random()* g_info[0].length);
+    if (randomIndexArray.indexOf(rannum) === -1) {
+      randomIndexArray.push(rannum)
+    } else {
+      i--
+    }
+  }
+  // console.log(randomIndexArray);
+  for (i=0; i< g_info[0].length; i++) {
+    if (randomIndexArray.includes(i)) quizArr.push(g_info[0][i]);
+    else galleryNames.push(g_info[0][i].gallery_name);
+  }
+  // console.log(galleryNames);
+  // console.log(quizArr);
+  const data = {quizArr, galleryNames};
+  res.json(data);
+});
+
 router.post('/createPost', async(req, res)=> {
   const title = req.query.title;
   const contents = req.query.contents;

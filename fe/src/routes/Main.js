@@ -1,4 +1,3 @@
-import React from "react";
 import Map from "components/map/Map";
 import { FiArrowDown } from "react-icons/fi";
 

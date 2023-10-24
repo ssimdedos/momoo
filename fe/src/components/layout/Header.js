@@ -1,11 +1,10 @@
-import { Cookies, useCookies } from 'react-cookie';
+import { useCookies } from 'react-cookie';
 import './header.css';
 import logo192 from 'assets/icons/logo192.png';
 import {Link, useNavigate} from 'react-router-dom'
-import { useEffect, useState } from 'react';
 
 const Header = ({isLogin})=> {
-  const [cookies,,removeCookie] = useCookies(["naver_access"]);
+  const [,,removeCookie] = useCookies(["naver_access"]);
   const navigate = useNavigate()
   const logout = ()=> {
     if(window.confirm('로그아웃 하시겠습니까?')) {
@@ -28,6 +27,7 @@ const Header = ({isLogin})=> {
         <ul className="nav-items">
           <li><Link to="/" >Home</Link></li>
           <li><Link to="/board" >자유게시판</Link></li>
+          <li><Link to="/moodquiz" >Mood 퀴즈</Link></li>
           {isLogin? <li><button className='rm-btn-style logout-btn' onClick={logout} >로그아웃</button></li> : <li><Link to="/login" >로그인</Link></li>}
         </ul>
       </nav>

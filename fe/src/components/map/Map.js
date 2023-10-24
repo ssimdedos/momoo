@@ -1,10 +1,10 @@
 import React from "react";
 import { useEffect } from "react";
-import piknic from "assets/imgs/piknic.jpg";
+// import piknic from "assets/imgs/piknic.jpg";
 import { getGalleryInfo } from "services/MapService";
 
 const Map = () => {
-  useEffect((e)=> {
+  useEffect(()=> {
     const mapDiv = document.querySelector('#map');
     const mapOps = {
       center: new window.naver.maps.LatLng(37.551216799999885,126.97986827903746),
@@ -31,7 +31,7 @@ const Map = () => {
           `  <div>`,
           `    <h3>${e.gallery_name}</h3><br />`,
           `    <p>`,
-          `      <a href="${e.url}">${e.url}</a>`,
+          `      <a href="${e.url}" target='_blank' rel="noopener noreferrer">${e.url}</a>`,
           `    </p>`,
           `  </div>`,
           `</div>`,
@@ -49,6 +49,7 @@ const Map = () => {
     getMarkers();
 
   },[]);
+  
   return (
     <div>
       <div id="maaap"></div>

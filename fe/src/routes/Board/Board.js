@@ -1,5 +1,4 @@
 import BoardTable from "components/Board/BoardTable";
-import React from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import './board.css';

@@ -5,3 +5,7 @@ export async function getGalleryInfo() {
   return res.data;
 }
 
+export async function getMapquiz() {
+  const res = await axios.get('/api/getmapquiz');
+  return res.data;
+}
