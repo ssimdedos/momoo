@@ -15,28 +15,39 @@ router.get('/getgalleryinfo', async(req, res)=> {
 });
 
 router.get('/getmapquiz', async(req, res)=> {
-  const g_info = await db.query(`SELECT * FROM gallery_on_mon`);
+  let g_info = await db.query(`SELECT * FROM gallery_on_mon`);
+  g_info = g_info[0];
   let randomIndexArray = [];
-  let quizArr = [];
-  let galleryNames = [];
-
+  let randomIndexArray2 = [];
+  let quizArr = {};
+  
   for (let i=0; i<5; i++) {
-    const rannum = Math.floor(Math.random()* g_info[0].length);
+    const rannum = Math.floor(Math.random()* g_info.length);
+    let examples = [];
     if (randomIndexArray.indexOf(rannum) === -1) {
-      randomIndexArray.push(rannum)
+      randomIndexArray.push(rannum);
+      for (let j=0; j<4; j++) {
+        let ran = Math.floor(Math.random()* g_info.length);
+        if(randomIndexArray2.indexOf(ran) === -1) {
+          if (ran === rannum) j--
+          else {
+            randomIndexArray2.push(ran);
+            // console.log(ran);
+            examples.push(g_info[ran].gallery_name);
+          }
+        } else {
+          j--
+        }
+      }
+      quizArr[`${i+1}`] = {'lat':g_info[rannum].latitude, 'long':g_info[rannum].longitude, 'answer':g_info[rannum].gallery_name, examples};
+      // console.log(quizArr[`${i+1}`]['answer']);
+      quizArr[`${i+1}`]['examples'].splice(Math.floor(Math.random()*examples.length),0,quizArr[`${i+1}`]['answer']);
     } else {
       i--
     }
   }
-  // console.log(randomIndexArray);
-  for (i=0; i< g_info[0].length; i++) {
-    if (randomIndexArray.includes(i)) quizArr.push(g_info[0][i]);
-    else galleryNames.push(g_info[0][i].gallery_name);
-  }
-  // console.log(galleryNames);
   // console.log(quizArr);
-  const data = {quizArr, galleryNames};
-  res.json(data);
+  res.json(JSON.stringify(quizArr));
 });
 
 router.post('/createPost', async(req, res)=> {

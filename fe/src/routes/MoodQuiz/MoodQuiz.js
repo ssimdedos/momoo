@@ -3,31 +3,38 @@ import { useEffect, useState } from "react";
 import { getMapquiz } from "services/MapService";
 
 const MoodQuiz = () => {
-  const [isReady, setIsready] = useState(false);
-  const [answerInfo, setAnswerInfo] = useState({});
-  const [examInfo, setExamInfo] = useState({});
+  const [quizReady, setQuizReady] = useState(false);
+  const QuizSession = window.sessionStorage.getItem("moodQuiz");
 
   const quizStart = () => {
-    setIsready(true);
+    window.sessionStorage.setItem("isQuizStart", 1);
+    setQuizReady(true);
   }
-
+  
   const quizStop = () => {
-    setIsready(false);
+    window.sessionStorage.setItem("isQuizStart", 0);
+    setQuizReady(false);
   }
 
   useEffect(()=> {
     const initQuiz = async () => {
-      const contents = await getMapquiz();
+      if(QuizSession) {
+        console.log('세션 확인');
+        // console.log(QuizSession);
+      } else {
+        console.log('세션 없음');
+        let contents = await getMapquiz();
+        window.sessionStorage.setItem('moodQuiz',contents);
+      }
       // console.log(contents);
-      setAnswerInfo(contents.quizArr);
-      setExamInfo(contents.galleryNames);
     }
     
     initQuiz();
   },[]);
+  
   return(
     <div>
-      {isReady ? <><QuizMap examInfo={examInfo} answerInfo={answerInfo} /> <button onClick={quizStop}>나가기</button></> : <button onClick={quizStart}>시작하기</button>}
+      {quizReady ? <><QuizMap /> <button onClick={quizStop}>나가기</button></> : <button onClick={quizStart}>시작하기</button>}
     </div>
   )
 }
