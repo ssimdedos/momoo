@@ -1,19 +1,20 @@
-import QuizMap from "components/map/QuizMap";
+import QuizMap from "components/MoodQuizCom/QuizMap";
+import QuizResult from "components/MoodQuizCom/QuizResult";
 import { useEffect, useState } from "react";
 import { getMapquiz } from "services/MapService";
 
 const MoodQuiz = () => {
-  const [quizReady, setQuizReady] = useState(false);
+  const [quizStatus, setQuizStatus] = useState(0);
   const QuizSession = window.sessionStorage.getItem("moodQuiz");
 
   const quizStart = () => {
-    window.sessionStorage.setItem("isQuizStart", 1);
-    setQuizReady(true);
+    window.sessionStorage.setItem("quizStatus", 1);
+    setQuizStatus(1);
   }
   
   const quizStop = () => {
-    window.sessionStorage.setItem("isQuizStart", 0);
-    setQuizReady(false);
+    window.sessionStorage.setItem("quizStatus", 0);
+    setQuizStatus(0);
   }
 
   useEffect(()=> {
@@ -28,15 +29,17 @@ const MoodQuiz = () => {
       }
       // console.log(contents);
     }
-    
     initQuiz();
   },[]);
-  
-  return(
-    <div>
-      {quizReady ? <><QuizMap /> <button onClick={quizStop}>나가기</button></> : <button onClick={quizStart}>시작하기</button>}
-    </div>
-  )
+
+  if(quizStatus === 0) return <button onClick={quizStart}>시작하기</button>
+  else if(quizStatus === 1) return <><QuizMap /> <button onClick={quizStop}>나가기</button></>
+  else if(quizStatus === 2) return <><QuizResult /> <button onClick={quizStop}>나가기</button></>
+  // return(
+  //   <div>
+  //     {quizStatus ? <><QuizMap /> <button onClick={quizStop}>나가기</button></> : <button onClick={quizStart}>시작하기</button>}
+  //   </div>
+  // )
 }
 
 export default MoodQuiz;
