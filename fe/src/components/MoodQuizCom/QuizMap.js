@@ -33,6 +33,8 @@ const QuizMap = () => {
   }
 
   const toPrevious = async () => {
+    console.log(quizNum-2);
+    console.log(userAnswers[quizNum-2]);
     await makeQuiz(quizNum-2);
     // const selectedBtn = document.querySelector(`input[name="${quizNum-1+'번 문제'}"]:checked`);
     const selectedBtns = document.querySelectorAll(`input[name="${quizNum-2+'번 문제'}"]`);
@@ -71,18 +73,26 @@ const QuizMap = () => {
 
   useEffect(()=> {
     if(QuizSession) {
+      let userAnswers_tmp = window.sessionStorage.getItem("userAnswers");
       let num = 1;
-      let userAnswers = window.sessionStorage.getItem("userAnswers");
-      if (userAnswers) {
-        userAnswers = JSON.parse(userAnswers);
-        console.log(Object.keys(userAnswers)[Object.keys(userAnswers).length-1]);
-        num = Object.keys(userAnswers)[Object.keys(userAnswers).length-1];
+      if (userAnswers_tmp) {
+        userAnswers_tmp = JSON.parse(userAnswers_tmp);
+        // console.log(Object.keys(userAnswers_tmp)[Object.keys(userAnswers_tmp).length-1]);
+        num = Object.keys(userAnswers_tmp)[Object.keys(userAnswers_tmp).length-1];
+        setUserAnswers(userAnswers_tmp);
+        const selectedBtns = document.querySelectorAll(`input[name="${num+'번 문제'}"]`);
+        if(userAnswers_tmp[num]) {
+          const val = Array.from(selectedBtns).filter(e=> e.value === userAnswers_tmp[num]);
+          console.log(val);
+          // val[0].checked = true;
+        }
       }
       makeQuiz(num);
     } else {
       alert('잘못된 접근입니다. 다시 퀴즈를 시작해주세요');
       window.sessionStorage.setItem("quizStatus", 0);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
 
 

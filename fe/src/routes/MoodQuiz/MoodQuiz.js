@@ -15,6 +15,9 @@ const MoodQuiz = () => {
   const quizStop = () => {
     window.sessionStorage.setItem("quizStatus", 0);
     setQuizStatus(0);
+    window.sessionStorage.removeItem("moodQuiz");
+    window.sessionStorage.removeItem("userAnswers");
+    window.location.reload();
   }
 
   useEffect(()=> {
@@ -30,16 +33,12 @@ const MoodQuiz = () => {
       // console.log(contents);
     }
     initQuiz();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
 
   if(quizStatus === 0) return <button onClick={quizStart}>시작하기</button>
   else if(quizStatus === 1) return <><QuizMap /> <button onClick={quizStop}>나가기</button></>
-  else if(quizStatus === 2) return <><QuizResult /> <button onClick={quizStop}>나가기</button></>
-  // return(
-  //   <div>
-  //     {quizStatus ? <><QuizMap /> <button onClick={quizStop}>나가기</button></> : <button onClick={quizStart}>시작하기</button>}
-  //   </div>
-  // )
+  // else if(quizStatus === 2) return <><QuizResult /> <button onClick={quizStop}>나가기</button></>
 }
 
 export default MoodQuiz;

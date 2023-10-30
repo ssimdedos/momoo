@@ -1,24 +1,23 @@
 const {Router} = require('express');
 const fetch = require('node-fetch');
+const os = require('os');
 const { login_check } = require('../service/loginService');
 const db = require('../database/pool');
 require('dotenv').config();
 const router = Router();
-
 
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
 let state = "COOL";
 const redirectURI = encodeURI(process.env.NAVER_CALLBACK_URL);
 let api_url = "";
-
 // 네이버 로그인 로고 표출
 router.get('/naverlogin', function (req, res) {
   // console.log('들어옴');
   api_url = 'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=' + client_id + '&redirect_uri=' + redirectURI + '&state=' + state;
-   res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'});
-   res.end("<a href='"+ api_url + "'><img height='50' src='http://static.nid.naver.com/oauth/small_g_in.PNG'/></a>");
- });
+  res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'});
+  res.end("<a href='"+ api_url + "'><img height='50' src='http://static.nid.naver.com/oauth/small_g_in.PNG'/></a>");
+});
 
 
 // 네이버 정보 불러오기
@@ -29,14 +28,19 @@ router.get('/oauthnaver', async function (req, res) {
   // console.log(code);
   // console.log(state);
   api_url = 'https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id='
-   + client_id + '&client_secret=' + client_secret + '&redirect_uri=' + redirectURI + '&code=' + code + '&state=' + state;
-   const token_req = await fetch(api_url, {
+  + client_id + '&client_secret=' + client_secret + '&redirect_uri=' + redirectURI + '&code=' + code + '&state=' + state;
+  const token_req = await fetch(api_url, {
     method: 'GET',
     headers: {'X-Naver-Client-Id':client_id, 'X-Naver-Client-Secret': client_secret}
-   });
+  });
   //  console.log(await token_req.json());
-   const token_data = await token_req.json();
-   if(token_data.access_token) {
+  const token_data = await token_req.json();
+  if(token_data.access_token) {
+    //  console.log(os.platform());
+    let token_for = 'Bearer';
+    if(os.platform() === 'darwin') {
+      token_for = 'MAC';
+    }
     const token = token_data.access_token;
     const header = 'Bearer ' + token;
     const userDataRaw = await fetch('https://openapi.naver.com/v1/nid/me', {
@@ -59,7 +63,8 @@ router.get('/oauthnaver', async function (req, res) {
           maxAge: 100000000,
         }
       )
-      res.redirect("http://localhost:3000");
+      if(os.platform() === 'darwin') res.redirect("http://192.168.0.25:3000");
+      else res.redirect("http://localhost:3000");
     }
    }
 });

@@ -29,6 +29,7 @@ const AppRouter = () => {
       });
     }
     // console.log(cookies.naver_access.response);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
 
   return (

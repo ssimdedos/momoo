@@ -4,9 +4,11 @@ const authRouter = require('./routes/auth');
 const cors = require('cors');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+require('dotenv').config();
 
 const app = express();
-const port = 7303;
+const port = process.env.SERVER_PORT;
+
 
 app.use(cors());
 app.use(cookieParser());
