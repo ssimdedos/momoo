@@ -6,6 +6,8 @@ import { getMapquiz } from "services/MapService";
 const MoodQuiz = () => {
   const [quizStatus, setQuizStatus] = useState(0);
   const QuizSession = window.sessionStorage.getItem("moodQuiz");
+  const isQuizFin = window.sessionStorage.getItem("quizStatus");
+
 
   const quizStart = () => {
     window.sessionStorage.setItem("quizStatus", 1);
@@ -36,9 +38,14 @@ const MoodQuiz = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
 
+  useEffect(()=>{
+    console.log(isQuizFin);
+    if(isQuizFin === '2') setQuizStatus(2);
+  },[isQuizFin])
+
   if(quizStatus === 0) return <button onClick={quizStart}>시작하기</button>
   else if(quizStatus === 1) return <><QuizMap /> <button onClick={quizStop}>나가기</button></>
-  // else if(quizStatus === 2) return <><QuizResult /> <button onClick={quizStop}>나가기</button></>
+  else if(quizStatus === 2) return <><QuizResult /> <button onClick={quizStop}>나가기</button></>
 }
 
 export default MoodQuiz;

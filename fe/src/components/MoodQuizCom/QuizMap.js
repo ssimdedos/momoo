@@ -8,7 +8,7 @@ const QuizMap = () => {
   const [quizNum, setQuizNum] = useState(1);
   const [userAnswers, setUserAnswers] = useState({});
 
-  const makeQuiz = (num) => {
+  const makeQuiz = async (num) => {
     num = parseInt(num);
     const mapDiv = document.querySelector('#map');
     const mapOps = {
@@ -32,43 +32,31 @@ const QuizMap = () => {
     setQuizNum(num+1);
   }
 
-  const toPrevious = async () => {
-    console.log(quizNum-2);
-    console.log(userAnswers[quizNum-2]);
-    await makeQuiz(quizNum-2);
-    // const selectedBtn = document.querySelector(`input[name="${quizNum-1+'번 문제'}"]:checked`);
-    const selectedBtns = document.querySelectorAll(`input[name="${quizNum-2+'번 문제'}"]`);
-    if(userAnswers[quizNum-2]) {
-      const val = await Array.from(selectedBtns).filter(e=> e.value === userAnswers[quizNum-2]);
-      val[0].checked = true;
-    }
+  const toPrevious = () => {
+    makeQuiz(quizNum-2);
   }
 
-  const toNext = async () => {
+  const toNext = () => {
     if(userAnswers[quizNum-1]===undefined) {
       alert('정답을 선택해주세요.');
       return
     };
-    await makeQuiz(quizNum);
-    // console.log(quizNum);
-    const selectedBtns = document.querySelectorAll(`input[name="${quizNum+'번 문제'}"]`);
-    if(userAnswers[quizNum]) {
-      const val = await Array.from(selectedBtns).filter(e=> e.value === userAnswers[quizNum]);
-      val[0].checked = true;
-    }
+    makeQuiz(quizNum);
   }
-  const pickAnswer = async (answer) => {
+
+  const pickAnswer = (answer) => {
     const num = quizNum-1;
     // console.log(answer);
     const contents = {...userAnswers, [num]:answer};
-    await setUserAnswers(contents);
-    await window.sessionStorage.setItem("userAnswers", JSON.stringify(contents));
+    setUserAnswers(contents);
+    window.sessionStorage.setItem("userAnswers", JSON.stringify(contents));
   }
 
   const submitQuiz = () => {
     console.log(userAnswers);
     window.sessionStorage.setItem("moodQuizResult", userAnswers);
     window.sessionStorage.setItem("quizStatus", 2);
+    window.location.reload();
   }
 
   useEffect(()=> {
@@ -77,15 +65,8 @@ const QuizMap = () => {
       let num = 1;
       if (userAnswers_tmp) {
         userAnswers_tmp = JSON.parse(userAnswers_tmp);
-        // console.log(Object.keys(userAnswers_tmp)[Object.keys(userAnswers_tmp).length-1]);
         num = Object.keys(userAnswers_tmp)[Object.keys(userAnswers_tmp).length-1];
         setUserAnswers(userAnswers_tmp);
-        const selectedBtns = document.querySelectorAll(`input[name="${num+'번 문제'}"]`);
-        if(userAnswers_tmp[num]) {
-          const val = Array.from(selectedBtns).filter(e=> e.value === userAnswers_tmp[num]);
-          console.log(val);
-          // val[0].checked = true;
-        }
       }
       makeQuiz(num);
     } else {
@@ -95,17 +76,16 @@ const QuizMap = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
 
-
   return (
     <div>
-      <div id="maaap"></div>
       <h2>{quizNum-1}. 다음 장소는 어디일까요?</h2>
       <div id="map" style={{ width: "700px", height: "450px" }} />
       <label>
+        {/* 로딩이 두 번 되는 이슈 확인 231031 */}
         {examples.length !== 0 ? examples.map((e, i)=> {
           let example_no = i+1;
-          // console.log(quizNum-1+'-'+example_no);
-          return <label><input type="radio" key={quizNum-1+'-'+example_no} name={quizNum-1+'번 문제'} value={e} onClick={()=> {pickAnswer(e)}} ></input>{i+1+'번) '+e}</label>
+          if (userAnswers[quizNum-1] === e) return <label><input defaultChecked type="radio" key={quizNum-1+'-'+example_no} name={quizNum-1+'번 문제'} value={e} onClick={()=> {pickAnswer(e)}} ></input>{i+1+'번) '+e}</label>
+          else return <label><input type="radio" key={quizNum-1+'-'+example_no} name={quizNum-1+'번 문제'} value={e} onClick={()=> {pickAnswer(e)}} ></input>{i+1+'번) '+e}</label>
         }):<h2>loading ...</h2>}
       </label>
       <div>
