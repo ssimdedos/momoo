@@ -25,10 +25,10 @@ const MoodQuiz = () => {
   useEffect(()=> {
     const initQuiz = async () => {
       if(QuizSession) {
-        console.log('세션 확인');
+        // console.log('세션 확인');
         // console.log(QuizSession);
       } else {
-        console.log('세션 없음');
+        // console.log('세션 없음');
         let contents = await getMapquiz();
         window.sessionStorage.setItem('moodQuiz',contents);
       }
@@ -39,7 +39,7 @@ const MoodQuiz = () => {
   },[]);
 
   useEffect(()=>{
-    console.log(isQuizFin);
+    // console.log(isQuizFin);
     if(isQuizFin === '2') setQuizStatus(2);
   },[isQuizFin])
 
