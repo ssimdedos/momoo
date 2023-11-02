@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect } from "react";
 // import piknic from "assets/imgs/piknic.jpg";
 import { getGalleryInfo } from "services/MapService";
-
+import './map.css'
 const Map = () => {
   useEffect(()=> {
     const mapDiv = document.querySelector('#map');
@@ -10,7 +10,7 @@ const Map = () => {
       center: new window.naver.maps.LatLng(37.551216799999885,126.97986827903746),
       zoom: 12,
       zoomControl: true,
-      scaleControl: false,
+      scaleControl: true,
       logoControl: false,
       mapDataControl: false,
       minZoom: 6
@@ -43,6 +43,8 @@ const Map = () => {
         window.naver.maps.Event.addListener(marker, "click", (e)=> {
           if (infowindow.getMap()) infowindow.close();
           else infowindow.open(map, marker);
+          // console.log(e);
+          map.panTo(e.coord);
         });
       });
     };
@@ -50,10 +52,23 @@ const Map = () => {
 
   },[]);
   
+  
   return (
     <div>
-      <div id="maaap"></div>
-      <div id="map" style={{ width: "700px", height: "450px" }} />
+      <div id="map-container">
+        <ul className="map-list gallery-list">
+          <li><a href="1">metadata content</a></li>
+          <li><a href="2">flow content</a></li>
+          <li><a href="3">sectioning content</a></li>
+          <li><a href="4">heading content</a></li>
+          <li><a href="5">phrasing content</a></li>
+          <li><a href="6">embedded content</a></li>
+          <li><a href="7">interactive content</a></li>
+          <li><a href="8">palpable content</a></li>
+        </ul>
+        <div id="map" style={{ width: "700px", height: "450px" }} />
+        <ul className="map-list sub-list"></ul>
+      </div>
     </div>
   );
 };

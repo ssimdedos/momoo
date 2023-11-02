@@ -1,0 +1,19 @@
+#map-container {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.map-list {
+  width: 250px;
+  height: 450px;
+  min-width: 250px;
+  border-style: solid;
+  border-width: 2px;
+  border-color: red;
+  overflow: auto;
+}
+
+.map-list > li {
+  width: 250px;
+  height: 150px;
+}
