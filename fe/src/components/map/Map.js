@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useEffect } from "react";
 // import piknic from "assets/imgs/piknic.jpg";
 import { getGalleryInfo } from "services/MapService";
 import './map.css'
 const Map = () => {
+  const [galleryInfo, setGalleryInfo] = useState({});
   useEffect(()=> {
     const mapDiv = document.querySelector('#map');
     const mapOps = {
@@ -25,6 +26,7 @@ const Map = () => {
           position: new window.naver.maps.LatLng(parseFloat(e.latitude), parseFloat(e.longitude)),
           map: map
         });
+        e.marker = marker;
 
         const contentString = [
           `<div>`,
@@ -47,24 +49,25 @@ const Map = () => {
           map.panTo(e.coord);
         });
       });
+      setGalleryInfo(g_infos);
     };
     getMarkers();
-
   },[]);
   
+  const moveMarker = (e)=> {
+    galleryInfo.find((i)=> i.num === Number(e.target.id)).marker.trigger('click');
+  }
   
   return (
     <div>
       <div id="map-container">
         <ul className="map-list gallery-list">
-          <li><a href="1">metadata content</a></li>
-          <li><a href="2">flow content</a></li>
-          <li><a href="3">sectioning content</a></li>
-          <li><a href="4">heading content</a></li>
-          <li><a href="5">phrasing content</a></li>
-          <li><a href="6">embedded content</a></li>
-          <li><a href="7">interactive content</a></li>
-          <li><a href="8">palpable content</a></li>
+          {Object.keys(galleryInfo).length > 1? (
+            galleryInfo.map((g) => {
+              return <li><button key={g.num} id={g.num} onClick={(e)=> {moveMarker(e)}} >{g.gallery_name}</button></li>
+            })
+          ): <span>loading ...</span>}
+
         </ul>
         <div id="map" style={{ width: "700px", height: "450px" }} />
         <ul className="map-list sub-list"></ul>

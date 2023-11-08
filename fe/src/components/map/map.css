@@ -16,4 +16,6 @@
 .map-list > li {
   width: 250px;
   height: 150px;
+  border-bottom: solid 2px #f5f1f1;
+  background-color: #fff;
 }
